@@ -1,4 +1,4 @@
-# LSPD FiveM Server - Police Department Statistics
+# Police Department Statistics - MiGhettoRP LSPD
 
 ## Overview
 

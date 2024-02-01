@@ -2,45 +2,39 @@
 
 ## Overview
 
-This GitHub repository contains important statistics and data for the Los Santos Police Department (LSPD) in your FiveM server. These statistics provide valuable insights into the performance and activities of the police department within your gaming community.
+This GitHub repository contains the source code for a webpage that displays important statistics and data for the Los Santos Police Department (LSPD) in MiGhettoRP server. These statistics provide valuable insights into the performance and activities of the police department within the PD community.
 
-## PD Stats
+## Webpage Features
 
-Here's a breakdown of the LSPD statistics:
+- Displays LSPD statistics, including:
+  - Robberies
+  - Arrests
+  - Raids
+  - Tickets
+  - Events
+  - Strikes
+  - Time As PD
 
-- **Robberies:**
-  - This represents the total number of robberies successfully handled by the LSPD.
-
-- **Arrests:**
-  - This indicates the number of arrests made by the LSPD, apprehending criminals in Los Santos.
-
-- **Raids:**
-  - The count of successful raids executed by the LSPD as part of their duty.
-
-- **Tickets:**
-  - The number of tickets issued to individuals for various offenses.
-
-- **Events:**
-  - Events hosted or participated in by the LSPD.
-
-- **Strikes:**
-  - Strikes against the LSPD personnel, if any.
-
-- **Time As PD:**
-  - The total accumulated time spent by the player as a member of the LSPD.
+- Provides an easy-to-read and user-friendly interface for accessing and understanding the statistics.
 
 ## How to Use
 
-You can use this repository to keep track of the LSPD's performance and monitor the progression of the police department in your FiveM server. You can also use this data to make informed decisions about the server's balance and role-play experiences.
+You can use this webpage by following these steps:
+
+1. Clone or download this repository to your local machine.
+
+2. Open the `PD.html` file in a web browser to view the LSPD statistics webpage.
+
+3. Explore the statistics of MiGhettoRP LSPD's performance.
 
 ## Contributing
 
-If you'd like to contribute to this repository or improve the tracking of LSPD statistics, feel free to create pull requests with your changes. We encourage collaboration and community contributions to make this resource even better.
+If you'd like to contribute to the development of this webpage, feel free to fork this repository and make your changes. Submit pull requests to suggest improvements or new features.
 
 ## License
 
-This repository is open-source and available under the [MIT License](LICENSE). Please make sure to adhere to the license terms if you plan to use or modify the contents.
+This repository is open-source and available under the [MIT License](LICENSE). Please make sure to adhere to the license terms if you plan to use or modify the webpage's source code.
 
 ---
 
-Enjoy using this resource to keep an eye on the LSPD's activities in your FiveM server! If you have any questions or suggestions, please don't hesitate to reach out or open an issue in this repository. Happy gaming!
+Enjoy using this webpage to keep track of the LSPD's activities in your FiveM server! If you have any questions or suggestions, please don't hesitate to reach out or open an issue in this repository. Happy gaming!

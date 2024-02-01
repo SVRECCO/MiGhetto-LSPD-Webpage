@@ -1,4 +1,4 @@
-# Police Department Statistics - MiGhettoRP LSPD
+# MiGhettoRP LSPD Police - Department Statistics
 
 ## Overview
 

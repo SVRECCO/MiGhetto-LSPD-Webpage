@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="https://techstarwebsolutions.com/Icons/GRP2.png">
+    <meta property="og:title" content="MiGhetto LSPD Stats">
+    <meta property="og:description" content="LSPD Stats website. Created by SethV, this website tracks the actions and achievements of (LSPD) officers.">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://kit.fontawesome.com/34fc7af9ad.js" crossorigin="anonymous"></script>
+    <style>
+        .dark-mode {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .official-seal {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .card-img {
+            max-width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 20px; 
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .user-info p {
+            margin: 0;
+            font-size: 12px; 
+            font-weight: bold;
+        }
+
+        .user-info .user-details {
+            text-align: center;
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+        }
+
+        .stats i {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        .stats p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .center-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info-item {
+            border: 1px solid #fff;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .user-avatar {
+            border: 2px solid #ffffffb7;
+            border-radius: 50%;
+        }
+
+        .stats-border {
+            border: 1px solid #ffffff62; 
+            padding: 10px; 
+            border-radius: 5px; 
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container mt-5">
+        <div class="center-logo">
+            <img src="https://techstarwebsolutions.com/Icons/LSPD.png" alt="Logo" class="img-fluid" style="max-width: 200px;">
+        </div>
+        <h1 class="text-center">MiGhetto LSPD</h1>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <label for="sortSelect">Sort By:</label>
+                <select id="sortSelect" class="form-control" onchange="sortData()">
+                    <option value="robberies">Robberies</option>
+                    <option value="arrests">Arrests</option>
+                    <option value="raids">Raids</option>
+                    <option value="tickets">Tickets</option>
+                    <option value="events">Events</option>
+                    <option value="strikes">Strikes</option>
+                    <option value="policeRank">Rank</option>
+                    <option value="timeAsPD">Time as PD</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row" id="apiData">
+        </div>
+    </div>
+    <script>
+        const rankOrder = {
+            "PD DEV": 0,
+            "CHF": 1,
+            "AC": 2,
+            "HCDR": 3,
+            "CDR": 4,
+            "HLT": 5,
+            "LT": 6,
+            "HSGT": 7,
+            "SGT": 8,
+            "HCORP": 9,
+            "CORP": 10,
+            "HOFC": 11,
+            "OFC": 12,
+            "REC": 13,
+            "Use /setrank": 14,
+
+        };
+
+        async function fetchDataFromApi() {
+            try {
+                const response = await fetch('https://api.svrecco.com:3000/api/PD');
+                const data = await response.json();
+                const apiData = document.getElementById("apiData");
+
+                const sortedData = Object.entries(data).sort((a, b) => {
+                    const rankA = a[1].policeRank;
+                    const rankB = b[1].policeRank;
+                    return rankOrder[rankA] - rankOrder[rankB];
+                });
+
+                for (const [discordId, userData] of sortedData) {
+                    const { policeRank, discordName, robberies, arrests, raids, timeAsPD, tickets, events, strikes } = userData;
+                    let backgroundColor = '';
+
+                    if (robberies > 500 || arrests > 500 || raids > 500) {
+                        backgroundColor = '#800000';
+                    } else if (robberies > 100 || arrests > 100 || raids > 100) {
+                        backgroundColor = '#e6ac00';
+                    } else if (robberies > 50 || arrests > 50 || raids > 50) {
+                        backgroundColor = '#666666';
+                    }
+
+                    const userAvatarUrl = `https://techstarwebsolutions.com/PD/${discordId}.png`;
+
+                    const cardHtml = `
+                    <div class="col-md-4">
+                        <div class="card stats-border" style="background-color: ${backgroundColor};">
+                            <div class="card-header">
+                                <div class="user-info">
+                                    <div class="user-details">
+                                        <p class="card-title user-info-item"><i class="fas fa-user"></i> ${discordName}</p>
+                                        <p class="card-title user-info-item mt-2"><i class="fas fa-star"></i> Rank: <span data-policeRank="${policeRank}">${policeRank}</span></p>
+                                    </div>
+                                </div>
+                                <img src="${userAvatarUrl}" class="card-img rounded-circle user-avatar" alt="User Avatar">
+                            </div>
+                            <div class="card-body">
+                                <div class="stats stats-border mt-2">
+                                    <i class="fa fa-chart-pie"></i>
+                                    <p><strong>Robberies:</strong> <span data-robberies="${robberies}">${robberies}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fa fa-handcuffs"></i>
+                                    <p><strong>Arrests:</strong> <span data-arrests="${arrests}">${arrests}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fa fa-gavel"></i>
+                                    <p><strong>Raids:</strong> <span data-raids="${raids}">${raids}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fa fa-ticket"></i>
+                                    <p><strong>Tickets:</strong> <span data-tickets="${tickets}">${tickets}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fas fa-flag"></i>
+                                    <p><strong>Events:</strong> <span data-events="${events}">${events}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <p><strong>Strikes:</strong> <span data-strikes="${strikes}">${strikes}</span></p>
+                                </div>
+                                <div class="stats stats-border mt-2">
+                                    <i class="fa fa-clock"></i>
+                                    <p><strong>Time As PD:</strong> <span data-timeAsPD="${timeAsPD}">${timeAsPD}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    apiData.innerHTML += cardHtml;
+                }
+            } catch (error) {
+                console.error('Error fetching data from the API:', error);
+            }
+        }
+
+        async function sortData() {
+    const sortSelect = document.getElementById("sortSelect");
+    const sortKey = sortSelect.value;
+
+    const apiData = document.getElementById("apiData");
+
+    const cards = apiData.querySelectorAll(".card");
+
+    const sortedCards = Array.from(cards).sort((a, b) => {
+        if (sortKey === "policeRank") {
+            const rankA = a.querySelector(`span[data-policeRank]`).textContent;
+            const rankB = b.querySelector(`span[data-policeRank]`).textContent;
+
+            return rankOrder[rankA] - rankOrder[rankB];
+        } else if (sortKey === "timeAsPD") {
+            const timeA = parseFloat(a.querySelector(`span[data-timeAsPD]`).textContent);
+            const timeB = parseFloat(b.querySelector(`span[data-timeAsPD]`).textContent);
+
+            return timeB - timeA;
+        } else {
+            const valueA = parseFloat(a.querySelector(`span[data-${sortKey}]`).textContent);
+            const valueB = parseFloat(b.querySelector(`span[data-${sortKey}]`).textContent);
+
+            return valueB - valueA;
+        }
+    });
+
+    apiData.innerHTML = "";
+
+    let row = document.createElement("div");
+    row.classList.add("row");
+    
+    let columnCount = 3;
+
+    sortedCards.forEach((card, index) => {
+        const column = document.createElement("div");
+        column.classList.add("col-md-4");
+
+        column.appendChild(card);
+
+        row.appendChild(column);
+        columnCount++;
+
+        if (columnCount === 3 || index === sortedCards.length - 1) {
+            apiData.appendChild(row);
+            row = document.createElement("div");
+            row.classList.add("row");
+            columnCount = 0;
+        }
+    });
+}
+        window.addEventListener('load', () => {
+            fetchDataFromApi();
+        });
+    </script>
+    <a style="border: none;" onclick="window.open('https://secure.ssl.com/team/a58-1iefhho/site_seals/96087c8a-64e7d34b/site_report', 'site_report','height=600, width=400, top=100, left=100'); return false;" onmouseover="this.style.cursor='pointer'" class="official-seal" href="https://secure.ssl.com/team/a58-1iefhho/site_seals/96087c8a-64e7d34b/site_report">
+        <img width="130px" src="https://securesslcom.a.cdnify.io/assets/ssl_seal_1-3dfcdf69a9e544495dbcf366a74ee5c4baca7e4f8018f7ddfa22f2de9bcf464d.png" alt="Ssl seal 1" />
+    </a>
+</body>
+</html>
